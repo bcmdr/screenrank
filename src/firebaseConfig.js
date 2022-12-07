@@ -5,15 +5,17 @@ import { getAuth } from "firebase/auth";
 // Follow this pattern to import other Firebase services
 // import { } from 'firebase/<service>';
 
-const app = initializeApp({
-  apiKey: "AIzaSyDkpVk9Cj4UebPBRsVk9_I6dB4GGxkdmDQ",
-  authDomain: "screenlist-bcmdr.firebaseapp.com",
-  projectId: "screenlist-bcmdr",
-  storageBucket: "screenlist-bcmdr.appspot.com",
-  messagingSenderId: "935128397813",
-  appId: "1:935128397813:web:c1b1b209850abf77d452bc",
-  measurementId: "G-MFRPFBCFF9"
-});
+const firebaseConfig = {
+  apiKey: "AIzaSyDTNJQB9j04X-7BZMNMYwiW7GCzR3S7hFk",
+  authDomain: "screenrank-bcmdr.firebaseapp.com",
+  projectId: "screenrank-bcmdr",
+  storageBucket: "screenrank-bcmdr.appspot.com",
+  messagingSenderId: "106266079148",
+  appId: "1:106266079148:web:5030c2b0f9fd30ab401409",
+  measurementId: "G-S9GFS2Q30T"
+};
+
+const app = initializeApp(firebaseConfig);
 
 const analytics = getAnalytics(app);
 const auth = getAuth(app);

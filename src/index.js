@@ -4,6 +4,18 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+onAuthStateChanged(auth, 
+  (user) => {
+    if (user) {
+      setUser(user);
+      console.log(user);
+    } else {
+      setUser({});
+    }
+  }
+)
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
