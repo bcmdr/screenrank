@@ -1,6 +1,7 @@
 // import logo from './logo.svg';
 import './App.css';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import AwesomeDebouncePromise from 'awesome-debounce-promise'
 
 let id = 1;
 
@@ -33,6 +34,9 @@ function App() {
   const [locale, setLocale] = useState(
     savedLocale ? savedLocale : 'CA'
   );
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInput = useRef(null);
 
   useEffect(() => {
     localStorage.setItem(`list-${currentList.id}`, JSON.stringify(currentList));
@@ -83,6 +87,28 @@ function App() {
     setCurrentList(newList);
   }
 
+  async function handleSearchInputChange(event) {
+    // setPreviewSelected(null);
+    if (event.target.value === '') {
+      setSearchResults([]);
+      return;
+    }
+    const response = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=251ba64a492fa521304db43e5fa3d2ad&language=en-US&query=${event.target.value}&page=1&include_adult=false`);
+    const data = await response.json();
+    setSearchResults(data.results);
+  }
+
+  const handleSearchInputChangeDebounced = AwesomeDebouncePromise(
+    handleSearchInputChange, 
+    250
+  )
+
+  const handleSelectSearchResult = (movieData) => {
+    setSearchResults([]);
+    searchInput.current.value = '';
+    saveMovie(movieData);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -98,12 +124,13 @@ function App() {
               <li className="movie-list__item" key={index}>{item.title}</li>
             ))}
             <li className="movie-search">
-              <form id="movie-search__form" onSubmit={handleSearchSubmit}>
-                <input name="title"></input>
-                <button type="submit">Search</button>
-              </form>
+              <input autoFocus placeholder="Search Movie Titles..." ref={searchInput} onChange={handleSearchInputChangeDebounced} onFocus={(event) => {event.target.setSelectionRange(0, event.target.value.length)}} type="text"></input>
+              <ul>{searchResults && searchResults.map((item, index) => {
+                return <div key={index} onClick={(event) => handleSelectSearchResult(item)}>{item.title}</div>
+              })}</ul>
             </li>
           </ol>
+          <button onClick={() => { setCurrentList({...currentList, items: []}) }}>Clear</button>
         </article>
       </main>
     </div>
